@@ -4,18 +4,13 @@
 ### Team Member: Hanwool Lee, Kanglak Ma, Jaewoo Kim
 Autonomous driving using Yolov8 &amp; LiDAR
 
-<PC>
-Control.py
- 
- L> object_scan.py
- 
- L> lidar_scan.py
- 
- L> lane_detection.py
+[PC] <br />
+Control.py <br />
+ L> object_scan.py <br />
+ L> lidar_scan.py <br />
+ L> lane_detection.py <br />
  
 
-<Raspberry Pi>
- 
-camera_load_test.py
- 
+[Raspberry Pi] <br />
+camera_load_test.py <br /> 
 rspi.py
