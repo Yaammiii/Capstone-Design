@@ -2,49 +2,40 @@ import rclpy
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
 import matplotlib.pyplot as plt
-import threading
 import math
-import os
-
-def run_lidar_scan():
-    os.system('ros2 launch ydlidar_x4_example ydlidar_x4_example.launch.py')
+import numpy as np
 
 def draw(msg):
     length = len(msg.ranges)
-    x = [-msg.ranges[i]*math.cos((2*(i/length)*math.pi))*1000 for i in range(length)]
-    y = [msg.ranges[i]*math.sin((2*(i/length)*math.pi))*1000 for i in range(length)]
+    
+    # search 120 degree from searching point
+    s_point = int(length/10*3.3)
+    scan_range = int(length/3)
+    search_angle = list(np.linspace(s_point, s_point+scan_range, scan_range+1, dtype=np.uint16))
 
-    #while True:
-    plt.figure(1)
-    plt.cla()
-    plt.ylim(-3000,3000)
-    plt.xlim(-3000,3000)
-    plt.scatter(x, y, c='r', s=13)
-    #print(q)
-    #plt.scatter(q, r, c='b', s=13)
-    plt.pause(0.001)
-    #plt.close("all")
+    dist_info = np.array([msg.ranges[i] for i in search_angle if msg.ranges[i]<1])
+    dist_info[dist_info==0] = float('inf')
+    x = [msg.ranges[i]*math.cos((2*(i/length)*math.pi))*1000 for i in search_angle if msg.ranges[i]<1]
+    y = [msg.ranges[i]*math.sin((2*(i/length)*math.pi))*1000 for i in search_angle if msg.ranges[i]<1]
 
-def data_raw(data):
-    for angle in range(0,360):
-            if(data[angle]>1000):
-                x[angle] = data[angle] * math.cos(math.radians(angle))
-                y[angle] = data[angle] * math.sin(math.radians(angle))
+    # rate of too close points that trigger alert
+    trigger_rate = 0.1
+
+    n_triggers = sum(dist_info < 0.15)
+
+    if n_triggers/len(dist_info) > trigger_rate:
+        print('Warning! Object Too Close '+ str(n_triggers/len(dist_info)))
+        return x, y, True
+    return x, y, False
+    
 
 def callback(msg):
-    # This function will be called when a message is received
-    #print('Received message:')
-    
-    # choose one and uncomment to plot
-    #data_filter(msg.data)
     draw(msg)
 
 def main():
     rclpy.init()
     node = rclpy.create_node('LiDAR_Sub')
     node.create_subscription(LaserScan, '/scan', callback, qos_profile_sensor_data)
-
-    threading.Thread(target=run_lidar_scan).start()   # run plotting on the background
 
     # Wait for messages to arrive
     while rclpy.ok():
