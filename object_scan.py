@@ -3,7 +3,6 @@ import cv2
 from ultralytics import YOLO
 import random
 import os
-import time
 
 def object_detect(model, frame, detection_colors, class_list):
 
@@ -13,7 +12,7 @@ def object_detect(model, frame, detection_colors, class_list):
     # Convert tensor array to numpy
     DP = detect_params[0].cpu().numpy()
 
-    # temporary dict to save detected objects in cufrrent loop
+    # temporary dict to save detected objects in current loop
     data_dict = {}
 
     if len(detect_params[0]) != 0:
@@ -38,7 +37,7 @@ def object_detect(model, frame, detection_colors, class_list):
                                                     bb[3]-bb[1])
             # if Trafficlight is green, it doesn't need to be triggered
             # decision of light is depends on the brightness of upper/lower half side
-            if current_class == 'Trafficlight':
+            if current_class == 'trafficlight':
                 if data_dict[current_class] == True:
                     croppped = frame[int(bb[1]):int(bb[3]), int(bb[0]):int(bb[2])]
                     crop_upper = frame[int(bb[1]):int((bb[1]+bb[3])/2), int(bb[0]):int(bb[2])]
@@ -73,19 +72,19 @@ def object_detect(model, frame, detection_colors, class_list):
         
 def is_triggering_dist(object, height):
     dist = 1/(height) * 10000
-    if object == 'Trafficlight' and dist <303:
+    if object == 'trafficlight' and dist <303:
         return True
     
-    elif object == 'Crosswalk' and dist <309:
+    elif object == 'crosswalk' and dist <309:
         return True
 
-    elif object == 'Stop' and dist <261:
+    elif object == 'stop' and dist <261:
         return True
 
-    elif object == 'Speedlimit' and dist < 254:
+    elif object == 'speedlimit' and dist < 254:
         return True
     
-    elif object == 'Person' and dist <200:
+    elif object == 'person' and dist <200:
         return True
     
     else:
