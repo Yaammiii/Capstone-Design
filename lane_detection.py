@@ -38,14 +38,14 @@ def color_and_gradient_threshold(img, side):
     # Sobel x
     sobelx = cv2.Sobel(blurred, cv2.CV_64F, 1, 0) # Take the derivative in x
     sobel_postive_filtered = np.zeros_like(sobelx)
-    sobel_postive_filtered[(sobelx <= -50)] = 255
+    sobel_postive_filtered[(sobelx <= -70)] = 255
     abs_sobelx = sobel_postive_filtered
 
     #abs_sobelx = np.absolute(sobelx) # Absolute x derivative to accentuate lines away from horizontal
     scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
     
     # Apply Sobel filter- x
-    thresh_min = 80
+    thresh_min = 90
     thresh_max = 255
     sobel_filtered = np.zeros_like(scaled_sobel)
     sobel_filtered[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 255
@@ -56,7 +56,7 @@ def color_and_gradient_threshold(img, side):
     s_thresh_max = 255
     s_binary = np.zeros_like(blurred)
     s_binary[(blurred >= s_thresh_min) & (blurred <= s_thresh_max)] = 255
-    gaussian = 255-cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5,3)
+    gaussian = 255-cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5,2)
 
     cv2.imshow('Gaussian'+side, gaussian)
 
@@ -214,15 +214,18 @@ def curvatures(y_pix_pos, x_pix_pos, ploty):
         #print(len(y_pix_pos), '|', len(x_pix_pos))
 
         angle = np.arctan(fit_cr[0]) * 180 / np.pi
-        curverad = 0.485*angle + 90 + 3
+        curverad = 0.15*angle + 90 + 3
         print(fit_cr[1])
 
-        if fit_cr[1]>130:
-            curverad -= 8
+        # if fit_cr[1] is big, it means it's on the right lane
+        if fit_cr[1]>140:
+            curverad -= 13
 
+        elif fit_cr[1]<60:
+            curverad += 8
 
-        elif fit_cr[1]<70:
-            curverad += 5
+        elif fit_cr[1]<30:
+            curverad += 20
         #curverad
 
         return curverad
