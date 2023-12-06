@@ -5,30 +5,31 @@
 Autonomous driving using Yolov8 &amp; LiDAR
 
 [PC] <br />
-Control.py <br />
+control_V2.py <br />
  L> object_scan.py <br />
  L> lidar_scan.py <br />
  L> lane_detection.py <br />
  
 
 [Raspberry Pi] <br />
-camera_load_test.py <br /> 
+publish.py <br /> 
 rspi.py
 
 
 
-
-https://github.com/Yaammiii/Capstone-Design/assets/127203022/fed847bb-d91f-42aa-bb0b-fa6f0a5308a9
-
-<br />
+https://github.com/Yaammiii/Capstone-Design/assets/127203022/c1b30896-472c-4bec-a8b6-af878ce302d8
 
 
-https://github.com/Yaammiii/Capstone-Design/assets/127203022/b03ec2f4-ca07-4338-86c1-32dfc8361b28
 
 <br />
 
 
-https://github.com/Yaammiii/Capstone-Design/assets/127203022/521b3e0a-35fb-40f2-a78d-2613e66b649a
+
+https://github.com/Yaammiii/Capstone-Design/assets/127203022/fdcd38ae-d5ab-484d-92ba-d3f9f71527f0
+
+
+
+
 
 
 
